@@ -179,10 +179,13 @@ def beautify_en(text: str) -> str:
 	return text
 
 
-def beautify_zh(text: str) -> str:
+def beautify_zh(text: str, normalises_whitespace: bool = True) -> str:
 	for match in re_halfwidth_punct_after_chinese.finditer(text):
 		text = text[:match.start(2)] + match.group(2).translate(chinese_punct_replacement) + text[match.end(2):]
 	text = text.replace('(', '（').replace(')', '）')
 	text = re_banned_chars_zh.sub('', text)
-	text = normalise_whitespace(text)
+	if normalises_whitespace:
+		text = normalise_whitespace(text)
+	else:
+		text = compress_whitespace(text)
 	return text
