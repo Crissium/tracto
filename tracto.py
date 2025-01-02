@@ -189,7 +189,7 @@ def join_sentences(sentences: list[str]) -> str:
 	buf = []
 	for i, s in enumerate(sentences):
 		s = s.strip()
-		if i > 0 and is_chinese(sentences[i - 1][-1], True) and is_chinese(s[0], True):
+		if i == 0 or (is_chinese(sentences[i - 1][-1], True) and is_chinese(s[0], True)):
 			buf.append(s)
 		else:
 			buf.append(' ' + s)
