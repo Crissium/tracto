@@ -32,7 +32,16 @@ COMMON_PUNCT = {
 	',',
 	'#'
 }
-CHINESE_PUNCT_WITH_SPECIAL_NAME = {
+EXCLUSIVELY_CHINESE_PUNCT = {
+	'，',
+	'、',
+	'。',
+	'：',
+	'；',
+	'？',
+	'！',
+	'（',
+	'）',
 	'〈',
 	'〉',
 	'《',
@@ -47,9 +56,11 @@ CHINESE_PUNCT_WITH_SPECIAL_NAME = {
 	'〕',
 	'〖',
 	'〗',
-	'·'
+	'·',
+	'～'
 }
 IN_WORD_PUNCT = {"'", '-', '’'}
+
 
 def is_whitespace(c: str) -> bool:
 	category = unicodedata.category(c)
@@ -65,19 +76,19 @@ def is_chinese_char(c: str) -> bool:
 
 
 def is_chinese_punct(c: str) -> bool:
-	if c in COMMON_PUNCT or c in CHINESE_PUNCT_WITH_SPECIAL_NAME:
+	if c in COMMON_PUNCT or c in EXCLUSIVELY_CHINESE_PUNCT:
 		return True
 
-	try:
-		name = unicodedata.name(c)
-	except ValueError:
-		return False
-	
-	return is_punct(c) and (name.startswith('IDEOGRAPHIC') or name.startswith('FULLWIDTH'))
+
+def is_chinese(c: str, strict: bool = False) -> bool:
+	if strict:
+		return is_chinese_char(c) or c in EXCLUSIVELY_CHINESE_PUNCT
+	else:
+		return is_chinese_char(c) or is_chinese_punct(c)
 
 
-def is_chinese(c: str) -> bool:
-	return is_chinese_char(c) or is_chinese_punct(c)
+def is_letter(c: str) -> bool:
+	return unicodedata.category(c) in ('Lu', 'Ll', 'Lt', 'Lm')
 
 
 def compress_whitespace(s: str) -> str:
@@ -122,7 +133,8 @@ def normalise_whitespace(s: str, add_space_between_en_zh: bool = True) -> str:
 			while i < len(s) and is_whitespace(s[i]):
 				i += 1
 		else:
-			if add_space_between_en_zh and len(buf) > 0 and is_chinese(buf[-1]) and not is_chinese_punct(buf[-1]):
+			if (add_space_between_en_zh and len(buf) > 0 and is_chinese(buf[-1]) and not is_chinese_punct(buf[-1]))\
+				or (is_letter(s[i]) and len(buf) > 0 and is_punct(buf[-1]) and buf[-1] not in EXCLUSIVELY_CHINESE_PUNCT):
 				buf.append(' ')
 
 			buf.append(s[i])
@@ -171,6 +183,17 @@ def split_into_sentences_zh(text: str) -> list[str]:
 	for match in re_halfwidth_punct_after_chinese.finditer(text):
 		text = text[:match.start(2)] + match.group(2).translate(chinese_punct_replacement) + text[match.end(2):]
 	return [s_stripped for s in re_sentence_sep_zh.split(text) if (s_stripped := s.strip())]
+
+
+def join_sentences(sentences: list[str]) -> str:
+	buf = []
+	for i, s in enumerate(sentences):
+		s = s.strip()
+		if i > 0 and is_chinese(sentences[i - 1][-1], True) and is_chinese(s[0], True):
+			buf.append(s)
+		else:
+			buf.append(' ' + s)
+	return ''.join(buf)
 
 
 def beautify_en(text: str) -> str:
