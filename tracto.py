@@ -7,7 +7,8 @@ from smartypants import smartypants as smarten_quotes
 CHINESE_WORD_RATIO = 1.5
 
 re_sentence_sep_zh = re.compile(r'(?<=[。？！；])')
-re_space_before_punct = re.compile(r' ([,\.\?!;，。？！；])')
+re_space_before_punct = re.compile(r' ([,\.\?!:;，。？！：；])')
+re_no_space_after_punct_en = re.compile(r'([,\.\?!:;%&\)\}\]])([\p{Latin}\p{Greek}])')
 re_chinese_char = re.compile(r'[\p{Han}]')
 re_halfwidth_punct_after_chinese = re.compile(r'([\p{Han}])([,.;:?!])')
 chinese_punct_replacement = str.maketrans(',.;:?!', '，。；：？！')
@@ -27,6 +28,7 @@ COMMON_PUNCT = {
 	'-',
 	'‐',
 
+	# TODO: Chinese only uses the following punctuation for numbers
 	'.',
 	'%',
 	',',
@@ -60,6 +62,7 @@ EXCLUSIVELY_CHINESE_PUNCT = {
 	'～'
 }
 IN_WORD_PUNCT = {"'", '-', '’'}
+
 
 
 def is_whitespace(c: str) -> bool:
@@ -118,7 +121,7 @@ def normalise_whitespace(s: str, add_space_between_en_zh: bool = True) -> str:
 	i = 0
 
 	while i < len(s):
-		if is_chinese(s[i]):
+		if is_chinese(s[i], True):
 			if is_chinese_char(s[i]):
 				if add_space_between_en_zh and len(buf) > 0 and not is_whitespace(buf[-1]) and not is_chinese(buf[-1]) and buf[-1] not in IN_WORD_PUNCT:
 					buf.append(' ')
@@ -133,14 +136,14 @@ def normalise_whitespace(s: str, add_space_between_en_zh: bool = True) -> str:
 			while i < len(s) and is_whitespace(s[i]):
 				i += 1
 		else:
-			if (add_space_between_en_zh and len(buf) > 0 and is_chinese(buf[-1]) and not is_chinese_punct(buf[-1]))\
-				or (is_letter(s[i]) and len(buf) > 0 and is_punct(buf[-1]) and buf[-1] not in EXCLUSIVELY_CHINESE_PUNCT and buf[-1] not in IN_WORD_PUNCT):
+			if add_space_between_en_zh and len(buf) > 0 and is_chinese(buf[-1]) and not is_chinese_punct(buf[-1]):
 				buf.append(' ')
 
 			buf.append(s[i])
 			i += 1
 
-	return ''.join(buf)
+	return re_no_space_after_punct_en.sub(r'\1 \2', ''.join(buf))
+	# return ''.join(buf)
 
 
 def split_into_words(text: str) -> list[str]:
