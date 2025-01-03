@@ -134,7 +134,7 @@ def normalise_whitespace(s: str, add_space_between_en_zh: bool = True) -> str:
 				i += 1
 		else:
 			if (add_space_between_en_zh and len(buf) > 0 and is_chinese(buf[-1]) and not is_chinese_punct(buf[-1]))\
-				or (is_letter(s[i]) and len(buf) > 0 and is_punct(buf[-1]) and buf[-1] not in EXCLUSIVELY_CHINESE_PUNCT):
+				or (is_letter(s[i]) and len(buf) > 0 and is_punct(buf[-1]) and buf[-1] not in EXCLUSIVELY_CHINESE_PUNCT and buf[-1] not in IN_WORD_PUNCT):
 				buf.append(' ')
 
 			buf.append(s[i])
