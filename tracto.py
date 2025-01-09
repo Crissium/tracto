@@ -154,7 +154,7 @@ def split_into_words(text: str) -> list[str]:
 			if len(buf) > 0:
 				words.append(''.join(buf))
 				buf.clear()
-		elif is_chinese(c):
+		elif is_chinese(c, strict=True):
 			if len(buf) > 0:
 				words.append(''.join(buf))
 				buf.clear()
