@@ -8,7 +8,7 @@ CHINESE_WORD_RATIO = 1.5
 
 re_sentence_sep_zh = re.compile(r'(?<=[。？！；])')
 re_space_before_punct = re.compile(r' ([,\.\?!:;，。？！：；])')
-re_no_space_after_punct_en = re.compile(r'([,\.\?!:;%&\)\}\]])([\p{Latin}\p{Greek}])')
+re_no_space_after_punct_en = re.compile(r'([,\.\?!:;%&\)\}\]])([\p{Latin}\p{Greek}\p{Han}])')
 re_chinese_char = re.compile(r'[\p{Han}]')
 re_halfwidth_punct_after_chinese = re.compile(r'([\p{Han}])([,.;:?!])')
 chinese_punct_replacement = str.maketrans(',.;:?!', '，。；：？！')
