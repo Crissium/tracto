@@ -8,7 +8,7 @@ CHINESE_WORD_RATIO = 1.5
 
 re_sentence_sep_zh = re.compile(r'(?<=[。？！；])')
 re_space_before_punct = re.compile(r' ([,\.\?!:;，。？！：；])')
-re_no_space_after_punct_en = re.compile(r'([,\.\?!:;%&\)\}\]])([\p{Latin}\p{Greek}\p{Han}])')
+re_no_space_after_punct_en = re.compile(r'([,\.\?!:;%&\)\}\]])([\p{Latin}\p{Greek}])')
 re_chinese_char = re.compile(r'[\p{Han}]')
 re_halfwidth_punct_after_chinese = re.compile(r'([\p{Han}])([,.;:?!])')
 chinese_punct_replacement = str.maketrans(',.;:?!', '，。；：？！')
@@ -71,7 +71,8 @@ def is_whitespace(c: str) -> bool:
 
 
 def is_punct(c: str) -> bool:
-	return unicodedata.category(c).startswith('P')
+	category = unicodedata.category(c)
+	return category[0] == 'P' or category == 'Sc'
 
 
 def is_chinese_char(c: str) -> bool:
@@ -154,7 +155,7 @@ def split_into_words(text: str) -> list[str]:
 			if len(buf) > 0:
 				words.append(''.join(buf))
 				buf.clear()
-		elif is_chinese(c, strict=True):
+		elif is_chinese(c):
 			if len(buf) > 0:
 				words.append(''.join(buf))
 				buf.clear()
