@@ -75,6 +75,10 @@ def is_punct(c: str) -> bool:
 	return category[0] == 'P' or category == 'Sc'
 
 
+def is_symbol(c: str) -> bool:
+	return unicodedata.category(c)[0] == 'S'
+
+
 def is_chinese_char(c: str) -> bool:
 	return re_chinese_char.match(c) is not None
 
