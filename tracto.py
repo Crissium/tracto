@@ -168,8 +168,9 @@ def split_into_words(text: str) -> list[str]:
 	return words
 
 
-def is_predominantly_chinese(text: str) -> bool:
-	tokens = split_into_words(text)
+def is_predominantly_chinese(text: str = '', words: list[str] = []) -> bool:
+	if len(words) == 0:
+		tokens = split_into_words(text)
 	chinese_count = 0
 	english_count = 0
 	for token in tokens:
