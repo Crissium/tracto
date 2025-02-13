@@ -170,13 +170,13 @@ def split_into_words(text: str) -> list[str]:
 
 def is_predominantly_chinese(text: str = '', words: list[str] = []) -> bool:
 	if len(words) == 0:
-		tokens = split_into_words(text)
+		words = split_into_words(text)
 	chinese_count = 0
 	english_count = 0
-	for token in tokens:
-		if all(c.isdigit() or is_punct(c) for c in token):
+	for word in words:
+		if all(c.isdigit() or is_punct(c) for c in word):
 			continue
-		elif any(is_chinese_char(c) for c in token):
+		elif any(is_chinese_char(c) for c in word):
 			chinese_count += 1
 		else:
 			english_count += 1
