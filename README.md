@@ -6,7 +6,6 @@ Just some text-processing functions for English and Chinese in Python that I kee
 
 - Python 3.10 or later
 - [Regex](https://pypi.org/project/regex/)
-- [Smartypants](https://github.com/leohemsted/smartypants.py)
 
 ## Installation
 

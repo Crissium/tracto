@@ -1,7 +1,5 @@
-import html
 import regex as re
 import unicodedata
-from smartypants import smartypants as smarten_quotes
 
 
 CHINESE_WORD_RATIO = 1.5
@@ -120,8 +118,6 @@ def compress_whitespace(s: str) -> str:
 
 def normalise_whitespace(s: str, add_space_between_en_zh: bool = True) -> str:
 	s = compress_whitespace(s)
-	s = smarten_quotes(s)
-	s = html.unescape(s)
 	buf = []
 	i = 0
 
