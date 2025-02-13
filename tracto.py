@@ -147,7 +147,7 @@ def normalise_whitespace(s: str, add_space_between_en_zh: bool = True) -> str:
 	# return ''.join(buf)
 
 
-def split_into_words(text: str) -> list[str]:
+def split_into_words(text: str, include_punct: bool = True) -> list[str]:
 	words = []
 	buf = []
 	for c in text:
@@ -155,6 +155,12 @@ def split_into_words(text: str) -> list[str]:
 			if len(buf) > 0:
 				words.append(''.join(buf))
 				buf.clear()
+		elif not c in IN_WORD_PUNCT and (is_punct(c) or is_symbol(c)):
+			if len(buf) > 0:
+				words.append(''.join(buf))
+				buf.clear()
+			if include_punct:
+				words.append(c)
 		elif is_chinese(c):
 			if len(buf) > 0:
 				words.append(''.join(buf))
