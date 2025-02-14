@@ -1,4 +1,4 @@
-from tracto import (
+from .tracto import (
 	COMMON_PUNCT,
 	EXCLUSIVELY_CHINESE_PUNCT,
 	IN_WORD_PUNCT,
