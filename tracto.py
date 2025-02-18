@@ -59,7 +59,7 @@ EXCLUSIVELY_CHINESE_PUNCT = {
 	'·',
 	'～'
 }
-IN_WORD_PUNCT = {"'", '-', '’'}
+IN_WORD_PUNCT = {"'", '-', '‐', '’'}
 
 
 
@@ -161,7 +161,7 @@ def split_into_words(text: str, include_punct: bool = True) -> list[str]:
 				buf.clear()
 			if include_punct:
 				words.append(c)
-		elif is_chinese(c):
+		elif not c in IN_WORD_PUNCT and is_chinese(c):
 			if len(buf) > 0:
 				words.append(''.join(buf))
 				buf.clear()
