@@ -97,6 +97,10 @@ def is_letter(c: str) -> bool:
 	return unicodedata.category(c) in ('Lu', 'Ll', 'Lt', 'Lm')
 
 
+def has_case(c: str) -> bool:
+	return unicodedata.category(c) in ('Lu', 'Ll')
+
+
 def compress_whitespace(s: str) -> str:
 	buf = []
 	i = 0

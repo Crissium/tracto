@@ -9,6 +9,7 @@ from .tracto import (
 	is_chinese_punct,
 	is_chinese,
 	is_letter,
+	has_case,
 	compress_whitespace,
 	normalise_whitespace,
 	split_into_words,
