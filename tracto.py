@@ -82,8 +82,7 @@ def is_chinese_char(c: str) -> bool:
 
 
 def is_chinese_punct(c: str) -> bool:
-	if c in COMMON_PUNCT or c in EXCLUSIVELY_CHINESE_PUNCT:
-		return True
+	return c in COMMON_PUNCT or c in EXCLUSIVELY_CHINESE_PUNCT
 
 
 def is_chinese(c: str, strict: bool = False) -> bool:
