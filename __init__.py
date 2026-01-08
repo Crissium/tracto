@@ -17,5 +17,6 @@ from .tracto import (
 	split_into_sentences_zh,
 	join_sentences,
 	beautify_en,
-	beautify_zh
+	beautify_zh,
+	re_punct_symbol_except_hyphen_and_apostrophe
 )
