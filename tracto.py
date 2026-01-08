@@ -12,6 +12,37 @@ re_halfwidth_punct_after_chinese = re.compile(r'([\p{Han}])([,.;:?!])')
 chinese_punct_replacement = str.maketrans(',.;:?!', '，。；：？！')
 re_banned_chars_en = re.compile(r'[^\p{Common}\p{Latin}\p{Greek}\p{General_Punctuation}\p{Superscripts_And_Subscripts}\p{Currency_Symbols}]')
 re_banned_chars_zh = re.compile(r'[^\p{Han}\p{Common}\p{Latin}\p{Greek}\p{General_Punctuation}\p{Superscripts_And_Subscripts}\p{Currency_Symbols}]')
+re_punct_symbol_except_hyphen_and_apostrophe = re.compile(
+	# Match any punctuation or symbol
+	r"[\p{P}\p{S}]"
+	+
+	# But exclude these exceptions
+	r"(?<!"
+	+
+	# Not apostrophes, hyphens, or percent signs
+	r"[''\-%]"
+	+
+	r"|"
+	+
+	# Not commas between digits
+	r"(?<=\d),(?=\d)"
+	+
+	r"|"
+	+
+	# Not periods between digits or at start of decimal
+	r"(?<=\d)\.(?=\d)"
+	+
+	r"|"
+	+
+	r"(?<=^|\s)\.(?=\d)"
+	+
+	r"|"
+	+
+	# Not currency symbols before digits
+	r"(?<=\p{Sc})(?=\d)"
+	+
+	r")"
+)
 
 COMMON_PUNCT = {
 	'“',
